@@ -1,5 +1,8 @@
 # music
 
 ## description
-Repository containing my music projects
+Repository containing my music files
 
+## branches
+- samples
+- projects
