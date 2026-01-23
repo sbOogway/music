@@ -34,5 +34,5 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
-        git commit -m "Format markdown files [skip ci]"
+        git commit -m "github/actions: Format markdown files [skip ci]"
         git push
