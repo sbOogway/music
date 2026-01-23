@@ -1,0 +1,38 @@
+name: Format Markdown Files
+
+on:
+  push:
+    branches: '**'  # Run on all branches
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install moreutils
+      run: sudo apt-get update && sudo apt-get install -y moreutils
+
+    - name: Format markdown files
+      run: find . -name "*.md" -type f -exec sh -c 'fmt -w80 -s "$1" | sponge "$1"' _ {} \;
+
+    - name: Check for changes
+      id: verify-changed-files
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+        else
+          echo "changed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Commit changes
+      if: steps.verify-changed-files.outputs.changed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Format markdown files [skip ci]"
+        git push
